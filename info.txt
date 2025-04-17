@@ -1,0 +1,13 @@
+database structures
+
+    Creepypastas:
+
+         #   Column                  Non-Null Count  Dtype  
+        ---  ------                  --------------  -----  
+        0   story_name              3510 non-null   object 
+        1   average_rating          3510 non-null   float64
+        2   tags                    2081 non-null   object 
+        3   body                    3510 non-null   object 
+        4   estimated_reading_time  3509 non-null   object 
+        5   publish_date            3510 non-null   object 
+        6   categories              3509 non-null   object 
