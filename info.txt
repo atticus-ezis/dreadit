@@ -11,3 +11,24 @@ database structures
         4   estimated_reading_time  3509 non-null   object 
         5   publish_date            3510 non-null   object 
         6   categories              3509 non-null   object 
+
+Search Filters
+
+    reading time 
+        0-1 min, 1-15 min, 15-30 min, 30 min-1 hr, +1 hr
+
+Rating
+
+    creepy pasta mean rating = 7.56
+
+TODOS:
+    1# Extract Author from text and create attribute
+    2# Add Comment model
+    3# add view count to Story 
+    ... add email to notify when your story gets comments or ratings 
+
+Unit Tests:
+    ratings between 0 - 10 
+    publish date can't be in future 
+    Every story needs -> Author, Body, Date
+    Delete and edit permissions
