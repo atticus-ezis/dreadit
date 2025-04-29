@@ -1,3 +1,9 @@
+TODOS:
+    1# Extract Author from text and create attribute
+    2# Add Comment model
+    3# add view count to Story 
+    ... add email to notify when your story gets comments or ratings 
+
 database structures
 
     Creepypastas:
@@ -21,11 +27,7 @@ Rating
 
     creepy pasta mean rating = 7.56
 
-TODOS:
-    1# Extract Author from text and create attribute
-    2# Add Comment model
-    3# add view count to Story 
-    ... add email to notify when your story gets comments or ratings 
+
 
 Unit Tests:
     ratings between 0 - 10 

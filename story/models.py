@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 import pandas as pd
 
 excel_data = pd.read_excel('creepypastas.xlsx')
@@ -21,7 +22,7 @@ class Category(models.Model):
 class Story(models.Model):
     story_name = models.CharField(max_length=250)
     # add author
-    publish_date = models.DateField()
+    publish_date = models.DateField(default=date.today)
     creepypasta_rating = models.FloatField()
     native_rating = models.FloatField(null=True, blank=True)
     body = models.TextField()
@@ -53,7 +54,7 @@ class Story(models.Model):
             return '60+ min'
         
     def save(self, *args, **kwargs):
-        if not self.reading_time or self.original_body != self.body:
+        if not self.reading_time or len(self.original_body) != len(self.body):
             self.reading_time = self.find_reading_time()
         super().save(*args, **kwargs)
         self.original_body = self.body
