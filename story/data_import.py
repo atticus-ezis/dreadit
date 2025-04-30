@@ -4,6 +4,18 @@ from datetime import datetime
 
 df = pd.read_excel('creepypastas.xlsx')
 
+def find_author(tag_list):
+    tags_to_remove = ['Video Narratives OK', 'WatchThe-Aftermath', 'Bedtime Series']
+    cleaned_tags = [tag for tag in tag_list if tag not in tags_to_remove]
+
+    for tag_item in cleaned_tags:
+
+        if tag_item == 'anonymously authored':
+                return 'Unkown'
+        if tag_item[0] == tag_item[0].upper():
+                return tag_item
+        
+    return 'Unkown'
 
 for row in df.itertuples(index=False):
     story = Story.objects.create(
@@ -13,11 +25,21 @@ for row in df.itertuples(index=False):
         native_story = False,
     )
 
-    # create tag object and add to story 
-    tag_names = [tag.strip() for tag in (row.tags or '').split(',')]
-    for tag_name in tag_names:
-        tag, _ = Tag.objects.get_or_create(name=tag_name)
-        story.tags.add(tag)
+    # list tags, extract author, create Tag object, add to Story object
+    if row.tags:
+        tag_names = [tag.strip() for tag in (row.tags or '').split(',')]
+        tags_to_remove = ['Video Narratives OK', 'WatchThe-Aftermath', 'Bedtime Series']
+        cleaned_tags = [tag for tag in tag_names if tag not in tags_to_remove]
+
+
+        story.author = find_author(tag_names)
+
+        for tag_name in tag_names:
+            if tag_name != story.author:
+                tag, _ = Tag.objects.get_or_create(name=tag_name)
+                story.tags.add(tag)
+    else:
+        story.author = "Unkown"
 
     # create category object and add to story 
     category_names = [category.strip() for category in (row.categories or '').split(',')]
@@ -33,7 +55,7 @@ for row in df.itertuples(index=False):
         date_obj = None
     story.publish_date = date_obj
 
-    
+
 
     story.save()
     

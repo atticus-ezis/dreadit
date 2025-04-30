@@ -7,24 +7,30 @@ df = pd.DataFrame(excel_data)
 mean_rating = df['average_rating'].mean()
 print(mean_rating)
 
-# Create your models here.
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    def __init__(self):
+    def __str__(self):
         return self.name
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    def __init__(self):
+    def __str__(self):
         return self.name
     
 
 class Story(models.Model):
     story_name = models.CharField(max_length=250)
     # add author
+    
     publish_date = models.DateField(default=date.today)
-    creepypasta_rating = models.FloatField()
+
+    creepypasta_rating = models.FloatField(null=True, blank=True)
     native_rating = models.FloatField(null=True, blank=True)
+    
+    # add view count 
+    views = models.IntegerField(null=0)
+
     body = models.TextField()
     native_story = models.BooleanField()
 
@@ -32,17 +38,17 @@ class Story(models.Model):
     categories = models.ManyToManyField(Category, related_name='stories')
     tags = models.ManyToManyField(Tag, related_name='stories')
 
-    
     # calculations 
     reading_time = models.CharField(max_length=20, blank=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.original_body = self.body
+        # change to len
+        self.body_length = len(self.body)
         
     def find_reading_time(self):
         char_count = len(self.body) 
-        if char_count < 250:
+        if char_count <= 250:
             return '1 min'
         elif char_count <= 250 * 15:
             return '1-15 min'
@@ -51,13 +57,13 @@ class Story(models.Model):
         elif char_count <= 250 * 60:
             return '30-60 min'
         else:
-            return '60+ min'
+            return '1hr +'
         
     def save(self, *args, **kwargs):
-        if not self.reading_time or len(self.original_body) != len(self.body):
+        if not self.reading_time or self.body_length != len(self.body):
             self.reading_time = self.find_reading_time()
         super().save(*args, **kwargs)
-        self.original_body = self.body
+        self.body_length = len(self.body)
 
     def __str__(self):
         return self.story_name
